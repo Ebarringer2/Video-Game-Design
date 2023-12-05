@@ -55,8 +55,8 @@ class Game:
     
     def new(self):
         # instantiate players with different key bindings 
-        playerA = Player(10, 180, 10, 10, 'a', 'd', 'SPACE', self)
-        playerB = Player(20, 180, 10, 10, 'LEFT', 'RIGHT', 'UP', self)
+        self.playerA = Player(100, 180, 25, 25, 'a', 'd', 'SPACE', self, BLUE)
+        self.playerB = Player(200, 180, 25, 25, 'LEFT', 'RIGHT', 'UP',self, WHITE)
         self.score = 0
         self.all_sprites = pg.sprite.Group()
         self.all_players = pg.sprite.Group()
@@ -66,8 +66,8 @@ class Game:
         self.all_super_jump = pg.sprite.Group()
         self.all_size_mod = pg.sprite.Group()
 
-        self.all_players.add(playerA)
-        self.all_players.add(playerB)
+        self.all_players.add(self.playerA)
+        self.all_players.add(self.playerB)
         # list instantiation method
         for p in PLATFORM_LIST:
 
@@ -82,7 +82,7 @@ class Game:
             self.all_power_ups.add(PowerUp)
         
         self.run()
-    # run loop method
+    
     def run(self):
 
         self.playing = True
@@ -98,49 +98,49 @@ class Game:
         if self.playing == True:
             self.all_sprites.update()
         # check for interaction with platform
-            if playerA.x in self.all_players > 0:
+            if self.playerA.rect.x in self.all_players > 0:
 
-                hits_a = pg.sprite.spritecollide(playerA, self.all_platforms, False)
+                hits_a = pg.sprite.spritecollide(self.playerA, self.all_platforms, False)
 
                 if hits_a:
 
-                    playerA.pos.y = hits_a[0].rect.top
-                    playerA.vel.y = 0
-                    playerA.vel.y = hits_a[0].speed*1.5
+                    self.playerA.pos.y = hits_a[0].rect.top
+                    self.playerA.vel.y = 0
+                    self.playerA.vel.y = hits_a[0].speed*1.5
         
-            if playerB.vel.y > 0:
+            if self.playerB.vel.y > 0:
             # check if player B interacts with platform
-                hits_b = pg.sprite.spritecollide(playerB, self.all_platforms, False)
+                hits_b = pg.sprite.spritecollide(self.playerB, self.all_platforms, False)
 
                 if hits_b:
 
-                    playerB.pos.y = hits_b[0].rect.top
-                    playerB.vel.y = 0
-                    playerB.vel.y = hits_b[0].speed*1.5
+                    self.playerB.pos.y = hits_b[0].rect.top
+                    self.playerB.vel.y = 0
+                    self.playerB.vel.y = hits_b[0].speed*1.5
 
-            if playerA.vel.y < 0:
+            if self.playerA.vel.y < 0:
                 # checks for play A interactions with platforms
-                hits_a = pg.sprite.spritecollide(playerA, self.all_platforms, False)
+                hits_a = pg.sprite.spritecollide(self.playerA, self.all_platforms, False)
 
                 if hits_a:
 
-                    if self.player_a.rect.bottom >= hits_a[0].rect.top - 1:
+                    if self.playerA.rect.bottom >= hits_a[0].rect.top - 1:
 
-                        playerA.rect.top = hits_a[0].rect.bottom
-                        playerA.acc.y = 5
-                        playerA.vel.y = 0
+                        self.playerA.rect.top = hits_a[0].rect.bottom
+                        self.playerA.acc.y = 5
+                        self.playerA.vel.y = 0
         
-            if playerB.vel.y < 0:
+            if self.playerB.vel.y < 0:
             # checks for player B interactions with platforms
-                hits_b = pg.sprite.spritecollide(playerB, self.all_platforms, False)
+                hits_b = pg.sprite.spritecollide(self.playerB, self.all_platforms, False)
 
                 if hits_b:
 
-                    if playerB.rect.bottom >= hits_a[0].rect.bottom:
+                    if self.playerB.rect.bottom >= hits_a[0].rect.bottom:
 
-                        playerB.rect.top = hits_a[0].rect.bottom
-                        playerB.acc.y = 5
-                        playerB.vel.y = 0
+                        self.playerB.rect.top = hits_a[0].rect.bottom
+                        self.playerB.acc.y = 5
+                        self.playerB.vel.y = 0
     
     def events(self):
 
@@ -153,11 +153,15 @@ class Game:
                     self.playing = False
                 
                 self.running = False
-    # draw screen
+    
     def draw(self):
 
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
+        players = pg.sprite.Group()
+        players.add(self.playerA)
+        players.add(self.playerB)
+        players.draw(self.screen)
         #self.draw_text()
         pg.display.flip()
     
@@ -171,11 +175,12 @@ class Game:
         self.screen.blit(text_surface, text_rect)
 
 g = Game()
-# run loop
+
 while g.running:
 
     g.new()
-
+    g.playerA.update()
+    g.playerB.update()
 pg.quit()
 
 
