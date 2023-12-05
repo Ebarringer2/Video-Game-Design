@@ -17,12 +17,12 @@ img_folder = game_folder
 # Set up for Player using WASD
 class Player(Sprite):
 
-    def __init__(self, x, y, w, h, k_left, k_right, k_jump, game):
+    def __init__(self, x, y, w, h, k_left, k_right, k_jump, game, color):
 
         Sprite.__init__(self)
 
         self.image = pg.Surface((w, h))
-        self.image.fill(RED)
+        self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -124,7 +124,10 @@ class Player(Sprite):
 
         self.speed = PLAYER_SPEED
         self.hop = PLAYER_JUMP
-        self.image = pg.Surface((20, 20))        
+        self.image = pg.Surface((20, 20))   
+
+    def display(self):
+        self.draw(self.game.screen)     
 
 # class for player using arrow keys
 '''class PlayerB(Sprite):
